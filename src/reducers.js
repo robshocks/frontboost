@@ -40,13 +40,13 @@ export const cards = (state, action) => {
   }
 };
 
-export const decks = (state, action) => {
+export const folders = (state, action) => {
   switch (action.type) {
     case 'RECEIVE_DATA':
-      return action.data.decks || state;
-    case 'ADD_DECK':
-      let newDeck = { name: action.data, id: +new Date };
-      return state.concat([newDeck]);
+      return action.data.folders || state;
+    case 'ADD_FOLDER':
+      let newFolder = { name: action.data, id: +new Date };
+      return state.concat([newFolder]);
     default:
       return state || [];
   }

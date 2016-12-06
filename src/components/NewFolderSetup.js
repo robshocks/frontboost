@@ -1,16 +1,35 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { addFolder } from '../actions';
+import { connect } from 'react-redux';
 
-const NewFolderSetup = () => {
-  return (
+const mapStateToProps = ({ addingFolder, folders }) => ({
+  folders,
+  addingFolder
+});
 
-        <div className="col-sm-12">
+const mapDispatchToProps = dispatch => ({
+  addFolder:   name => dispatch(addFolder(name))
+});
 
-        <input type="text" className="form-control input-lg" placeholder="Enter Folder Name"/>
-        <button className="btn col-xs-12 btn-lg text-center btn-primary m-b m-t">Create Folder</button>
+const NewFolderSetup = React.createClass({
+    render(){
+      return(  <div className="col-sm-12">
 
-        </div>
+        <input type="text" className="form-control input-lg" ref='addFolder' placeholder="Enter Folder Name"/>
+        <button onClick={this.createFolder} data-dismiss="modal" className="btn col-xs-12 btn-lg text-center btn-primary m-b m-t">Create Folder</button>
+        </div>);
+    },
+    createFolder(evt) {
+
+        var name = ReactDOM.findDOMNode(this.refs.addFolder).value;
+        this.props.addFolder(name);
+        console.log(name);
+
+    }
+});
 
 
-  );
-};
-export default (NewFolderSetup);
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewFolderSetup);

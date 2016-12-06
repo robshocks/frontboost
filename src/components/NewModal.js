@@ -28,7 +28,7 @@ const Arse = React.createClass({
     // Props are made available by Connect
     let props = this.props;
     //console.log(props);
-    
+
 
   return (
   <div id="myModal" className="modal fade" role="dialog">
@@ -43,11 +43,6 @@ const Arse = React.createClass({
                                 { props.addingFromModal == 'defaultAdd' &&   <NewDefaultSetup/>}
                                 { props.addingFromModal == 'folderShow' &&   <NewFolderSetup/>}
                                 { props.addingFromModal == 'processShow' && <NewProcSetup/>}
-
-
-
-
-
                       </div>
                     </div>
                 </div>

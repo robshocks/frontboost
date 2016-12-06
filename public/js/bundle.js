@@ -28045,8 +28045,8 @@ arguments[4][46][0].apply(exports,arguments)
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var addDeck = exports.addDeck = function addDeck(name) {
-  return { type: 'ADD_DECK', data: name };
+var addFolder = exports.addFolder = function addFolder(name) {
+  return { type: 'ADD_FOLDER', data: name };
 };
 var showAddDeck = exports.showAddDeck = function showAddDeck() {
   return { type: 'SHOW_ADD_DECK' };
@@ -28177,10 +28177,10 @@ function run() {
         { path: '/', component: _App2.default },
         _react2.default.createElement(
           _reactRouter.Route,
-          { path: '/deck/:deckId', component: _VisibleCards2.default },
-          _react2.default.createElement(_reactRouter.Route, { path: '/deck/:deckId/new', component: _NewCardModal2.default }),
-          _react2.default.createElement(_reactRouter.Route, { path: '/deck/:deckId/edit/:cardId', component: _EditCardModal2.default }),
-          _react2.default.createElement(_reactRouter.Route, { path: '/deck/:deckId/study', component: _StudyModal2.default })
+          { path: '/folder/:folderId', component: _VisibleCards2.default },
+          _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/new', component: _NewCardModal2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/edit/:cardId', component: _EditCardModal2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/study', component: _StudyModal2.default })
         ),
         _react2.default.createElement(_reactRouter.Route, { path: 'start', component: _Start2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: 'new', component: _NewModal2.default }),
@@ -28212,7 +28212,7 @@ function init() {
   store.subscribe(run);
   store.subscribe(save);
   // Dispatch sends action to the reducer which then changes state
-  store.dispatch((0, _actions.fetchData)());
+  //store.dispatch(fetchData());
 }
 
 init();
@@ -28462,127 +28462,205 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_CardModal2.default);
 
 },{"../actions":269,"./CardModal":273,"react-redux":65}],275:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = require('react-redux');
+
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Folders = function Folders() {
-    return _react2.default.createElement(
-        "div",
-        { className: "temp contain" },
-        _react2.default.createElement(
-            "div",
-            { className: "bg-light lter b-b wrapper-md" },
-            _react2.default.createElement(
-                "div",
-                { className: "row" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "col-sm-6 col-xs-12" },
-                    _react2.default.createElement(
-                        "h1",
-                        { className: "m-n font-thin h3 text-black" },
-                        "Folder"
-                    ),
-                    _react2.default.createElement(
-                        "small",
-                        { className: "text-muted" },
-                        "All processes listed here"
-                    )
-                )
-            )
-        ),
-        _react2.default.createElement(
-            "div",
-            { className: "wrapper-md" },
-            _react2.default.createElement(
-                "div",
-                { className: "row m-b" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "col-sm-5" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "input-group" },
-                        _react2.default.createElement("input", { type: "text", className: "form-control input-lg", placeholder: "Enter Search Term" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "input-group-btn" },
-                            _react2.default.createElement(
-                                "button",
-                                { className: "btn btn-primary btn-lg", type: "button" },
-                                "Search"
-                            )
-                        )
-                    )
-                )
-            ),
-            _react2.default.createElement(
-                "div",
-                { className: "row" },
-                _react2.default.createElement(
-                    "div",
-                    { className: " col-sm-5 list-group-lg list-group-sp" },
-                    _react2.default.createElement(
-                        "a",
-                        { href: "", className: "list-group-item clearfix m-b" },
-                        _react2.default.createElement(
-                            "span",
-                            { className: "clear" },
-                            _react2.default.createElement(
-                                "span",
-                                null,
-                                "Setup new site for Sitesync"
-                            ),
-                            _react2.default.createElement(
-                                "small",
-                                { className: "text-muted clear text-ellipsis" },
-                                "Setting up a site for the firt time"
-                            )
-                        )
-                    )
-                )
-            ),
-            _react2.default.createElement(
-                "div",
-                { className: "row" },
-                _react2.default.createElement(
-                    "div",
-                    { className: " col-sm-5 list-group-lg list-group-sp" },
-                    _react2.default.createElement(
-                        "a",
-                        { href: "", className: "list-group-item clearfix m-b" },
-                        _react2.default.createElement(
-                            "span",
-                            { className: "clear" },
-                            _react2.default.createElement(
-                                "span",
-                                null,
-                                "Setup new site for Sitesync"
-                            ),
-                            _react2.default.createElement(
-                                "small",
-                                { className: "text-muted clear text-ellipsis" },
-                                "Setting up a site for the firt time"
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
+var mapStateToProps = function mapStateToProps(_ref) {
+  var folders = _ref.folders,
+      addingFolder = _ref.addingFolder;
+  return {
+    folders: folders,
+    addingFolder: addingFolder
+  };
 };
-exports.default = Folders;
 
-},{"react":255}],276:[function(require,module,exports){
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    addFolder: function (_addFolder) {
+      function addFolder(_x) {
+        return _addFolder.apply(this, arguments);
+      }
+
+      addFolder.toString = function () {
+        return _addFolder.toString();
+      };
+
+      return addFolder;
+    }(function (name) {
+      return dispatch(addFolder(name));
+    }),
+    showAddDeck: function (_showAddDeck) {
+      function showAddDeck() {
+        return _showAddDeck.apply(this, arguments);
+      }
+
+      showAddDeck.toString = function () {
+        return _showAddDeck.toString();
+      };
+
+      return showAddDeck;
+    }(function () {
+      return dispatch(showAddDeck());
+    }),
+    hideAddDeck: function (_hideAddDeck) {
+      function hideAddDeck() {
+        return _hideAddDeck.apply(this, arguments);
+      }
+
+      hideAddDeck.toString = function () {
+        return _hideAddDeck.toString();
+      };
+
+      return hideAddDeck;
+    }(function () {
+      return dispatch(hideAddDeck());
+    }),
+    modalShowDef: function (_modalShowDef) {
+      function modalShowDef() {
+        return _modalShowDef.apply(this, arguments);
+      }
+
+      modalShowDef.toString = function () {
+        return _modalShowDef.toString();
+      };
+
+      return modalShowDef;
+    }(function () {
+      return dispatch(modalShowDef());
+    })
+  };
+};
+
+var Folders = _react2.default.createClass({
+  displayName: 'Folders',
+  render: function render() {
+    var props = this.props;
+
+    return _react2.default.createElement(
+      'div',
+      { className: 'temp contain' },
+      _react2.default.createElement(
+        'div',
+        { className: 'bg-light lter b-b wrapper-md' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-6 col-xs-12' },
+            _react2.default.createElement(
+              'h1',
+              { className: 'm-n font-thin h3 text-black' },
+              'Folder'
+            ),
+            _react2.default.createElement(
+              'small',
+              { className: 'text-muted' },
+              'All processes listed here'
+            )
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'wrapper-md' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row m-b' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-5' },
+            _react2.default.createElement(
+              'div',
+              { className: 'input-group' },
+              _react2.default.createElement('input', { type: 'text', className: 'form-control input-lg', placeholder: 'Enter Search Term' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'input-group-btn' },
+                _react2.default.createElement(
+                  'button',
+                  { className: 'btn btn-primary btn-lg', type: 'button' },
+                  'Search'
+                )
+              )
+            )
+          )
+        ),
+        props.folders.map(function (folder, i) {
+          return _react2.default.createElement(
+            'div',
+            { key: i, className: 'row' },
+            _react2.default.createElement(
+              'div',
+              { className: ' col-sm-5 list-group-lg list-group-sp' },
+              _react2.default.createElement(
+                _reactRouter.Link,
+                { to: '/folder/' + folder.id, className: 'list-group-item clearfix m-b' },
+                _react2.default.createElement(
+                  'span',
+                  { className: 'clear' },
+                  _react2.default.createElement(
+                    'span',
+                    null,
+                    folder.name
+                  ),
+                  _react2.default.createElement(
+                    'small',
+                    { className: 'text-muted clear text-ellipsis' },
+                    'Description'
+                  )
+                )
+              )
+            )
+          );
+        }),
+        _react2.default.createElement(
+          'div',
+          { className: 'row' },
+          _react2.default.createElement(
+            'div',
+            { className: ' col-sm-5 list-group-lg list-group-sp' },
+            _react2.default.createElement(
+              'div',
+              { onClick: this.resetModal, 'data-toggle': 'modal', 'data-target': '#myModal', className: 'list-group-item clearfix m-b' },
+              _react2.default.createElement(
+                'span',
+                { className: 'clear' },
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Add New Folder'
+                ),
+                _react2.default.createElement(
+                  'small',
+                  { className: 'text-muted clear text-ellipsis' },
+                  'Click here to add a new folder'
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Folders);
+
+},{"react":255,"react-redux":65,"react-router":104}],276:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28784,33 +28862,68 @@ var NewDefaultSetup = _react2.default.createClass({
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NewDefaultSetup);
 
 },{"../actions":269,"react":255,"react-redux":65}],280:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-      value: true
+  value: true
 });
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _actions = require('../actions');
+
+var _reactRedux = require('react-redux');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NewFolderSetup = function NewFolderSetup() {
-      return _react2.default.createElement(
-            "div",
-            { className: "col-sm-12" },
-            _react2.default.createElement("input", { type: "text", className: "form-control input-lg", placeholder: "Enter Folder Name" }),
-            _react2.default.createElement(
-                  "button",
-                  { className: "btn col-xs-12 btn-lg text-center btn-primary m-b m-t" },
-                  "Create Folder"
-            )
-      );
+var mapStateToProps = function mapStateToProps(_ref) {
+  var addingFolder = _ref.addingFolder,
+      folders = _ref.folders;
+  return {
+    folders: folders,
+    addingFolder: addingFolder
+  };
 };
-exports.default = NewFolderSetup;
 
-},{"react":255}],281:[function(require,module,exports){
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    addFolder: function addFolder(name) {
+      return dispatch((0, _actions.addFolder)(name));
+    }
+  };
+};
+
+var NewFolderSetup = _react2.default.createClass({
+  displayName: 'NewFolderSetup',
+  render: function render() {
+    return _react2.default.createElement(
+      'div',
+      { className: 'col-sm-12' },
+      _react2.default.createElement('input', { type: 'text', className: 'form-control input-lg', ref: 'addFolder', placeholder: 'Enter Folder Name' }),
+      _react2.default.createElement(
+        'button',
+        { onClick: this.createFolder, 'data-dismiss': 'modal', className: 'btn col-xs-12 btn-lg text-center btn-primary m-b m-t' },
+        'Create Folder'
+      )
+    );
+  },
+  createFolder: function createFolder(evt) {
+
+    var name = _reactDom2.default.findDOMNode(this.refs.addFolder).value;
+    this.props.addFolder(name);
+    console.log(name);
+  }
+});
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NewFolderSetup);
+
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65}],281:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29015,18 +29128,18 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mapStateToProps = function mapStateToProps(_ref) {
-  var decks = _ref.decks,
-      addingDeck = _ref.addingDeck;
+  var folders = _ref.folders,
+      addingFolder = _ref.addingFolder;
   return {
-    decks: decks,
-    addingDeck: addingDeck
+    folders: folders,
+    addingFolder: addingFolder
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    addDeck: function addDeck(name) {
-      return dispatch((0, _actions.addDeck)(name));
+    addFolder: function addFolder(name) {
+      return dispatch((0, _actions.addFolder)(name));
     },
     showAddDeck: function showAddDeck() {
       return dispatch((0, _actions.showAddDeck)());
@@ -29048,6 +29161,7 @@ var Sidebar = _react2.default.createClass({
   },
   render: function render() {
     var props = this.props;
+    console.log(props);
 
     return _react2.default.createElement(
       'aside',
@@ -29075,27 +29189,10 @@ var Sidebar = _react2.default.createClass({
                     'span',
                     { onClick: this.resetModal, 'data-toggle': 'modal', 'data-target': '#myModal', className: 'font-bold' },
                     'New ...'
-                  ),
-                  props.addingDeck && _react2.default.createElement('input', { ref: 'add', onKeyPress: this.createDeck })
+                  )
                 )
               ),
-              _react2.default.createElement(
-                'ul',
-                null,
-                props.decks.map(function (deck, i) {
-                  return _react2.default.createElement(
-                    'li',
-                    { key: i },
-                    _react2.default.createElement(
-                      _reactRouter.Link,
-                      { to: '/deck/' + deck.id },
-                      ' ',
-                      deck.name,
-                      ' '
-                    )
-                  );
-                })
-              ),
+              _react2.default.createElement('ul', null),
               _react2.default.createElement(
                 'li',
                 null,
@@ -29654,13 +29751,13 @@ var cards = exports.cards = function cards(state, action) {
   if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 };
 
-var decks = exports.decks = function decks(state, action) {
+var folders = exports.folders = function folders(state, action) {
   switch (action.type) {
     case 'RECEIVE_DATA':
-      return action.data.decks || state;
-    case 'ADD_DECK':
-      var newDeck = { name: action.data, id: +new Date() };
-      return state.concat([newDeck]);
+      return action.data.folders || state;
+    case 'ADD_FOLDER':
+      var newFolder = { name: action.data, id: +new Date() };
+      return state.concat([newFolder]);
     default:
       return state || [];
   }

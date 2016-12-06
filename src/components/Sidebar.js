@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { addDeck, showAddDeck, hideAddDeck, modalShowDef } from '../actions';
+import { addFolder, showAddDeck, hideAddDeck, modalShowDef } from '../actions';
 import { Link } from 'react-router';
 
-const mapStateToProps = ({ decks, addingDeck }) => ({
-  decks,
-  addingDeck
+const mapStateToProps = ({ folders, addingFolder }) => ({
+  folders,
+  addingFolder
 });
 
 const mapDispatchToProps = dispatch => ({
-  addDeck:   name => dispatch(addDeck(name)),
+  addFolder:   name => dispatch(addFolder(name)),
   showAddDeck: () => dispatch(showAddDeck()),
   hideAddDeck: () => dispatch(hideAddDeck()),
   modalShowDef: () => dispatch(modalShowDef())
@@ -23,6 +23,7 @@ const Sidebar = React.createClass({
   },
   render() {
     let props = this.props;
+    console.log(props);
 
     return (
       <aside id="aside" className="app-aside hidden-xs bg-white">
@@ -35,15 +36,10 @@ const Sidebar = React.createClass({
                             <a href="javascript:void(0)">
                               <i className="fa fa-plus-circle icon-large text-primary"></i>
                               <span onClick={this.resetModal} data-toggle="modal" data-target="#myModal" className="font-bold">New ...</span>
-                              { props.addingDeck && <input ref='add' onKeyPress={this.createDeck} /> }
                           </a>
                           </li>
                           <ul>
-                          {props.decks.map((deck, i) =>
-                            <li key={i}>
-                              <Link to={`/deck/${deck.id}`}> {deck.name} </Link>
-                            </li>
-                          )}
+
                           </ul>
                           <li>
                             <Link to={'/folders'}href="#" className="auto" data-toggle="collapse" data-target="#demo">
@@ -54,6 +50,16 @@ const Sidebar = React.createClass({
                               <i className="fa fa-folder icon text-primary"></i>
                               <span className="font-bold">Folders</span>
                             </Link>
+                            {/*
+                            <ul>
+                            {props.folders.map((folder, i) =>
+                              <li key={i}>
+                                <Link to={`/folder/${folder.id}`}> {folder.name} </Link>
+                              </li>
+
+                            )}
+                                </ul>
+                                */}
                           </li>
                             <li>
                               <Link to={'/scheduled'}>

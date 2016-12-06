@@ -27,10 +27,10 @@ function run () {
   ReactDOM.render((<Provider store={store}>
     <Router history={history}>
       <Route path='/' component={App}>
-        <Route path='/deck/:deckId' component={VisibleCards}>
-          <Route path='/deck/:deckId/new' component={NewCardModal} />
-          <Route path='/deck/:deckId/edit/:cardId' component={EditCardModal} />
-          <Route path='/deck/:deckId/study' component={StudyModal} />
+        <Route path='/folder/:folderId' component={VisibleCards}>
+          <Route path='/folder/:folderId/new' component={NewCardModal} />
+          <Route path='/folder/:folderId/edit/:cardId' component={EditCardModal} />
+          <Route path='/folder/:folderId/study' component={StudyModal} />
         </Route>
         <Route path='start' component={Start}></Route>
         <Route path='new' component={NewModal}></Route>
@@ -62,7 +62,7 @@ function init () {
   store.subscribe(run);
   store.subscribe(save);
   // Dispatch sends action to the reducer which then changes state
-  store.dispatch(fetchData());
+  //store.dispatch(fetchData());
 }
 
 init();
