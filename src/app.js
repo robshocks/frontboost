@@ -9,15 +9,17 @@ import { fetchData } from './actions';
 import * as reducers from './reducers';
 reducers.routing = routerReducer;
 
-console.log(React);
-
 import App from './components/App';
 import VisibleCards from './components/VisibleCards';
 import NewCardModal from './components/NewCardModal';
 import EditCardModal from './components/EditCardModal';
 import StudyModal from './components/StudyModal';
-
+import Folders from './components/Folders';
+import Start from './components/Start';
+import NewModal from './components/NewModal';
+// Initial store is created by running through reducer list and returning default values
 const store = createStore(combineReducers(reducers), applyMiddleware(thunkMiddleware));
+console.log(store.getState()); //Inspect default state
 const history = syncHistoryWithStore(browserHistory, store);
 
 function run () {
@@ -30,9 +32,12 @@ function run () {
           <Route path='/deck/:deckId/edit/:cardId' component={EditCardModal} />
           <Route path='/deck/:deckId/study' component={StudyModal} />
         </Route>
+        <Route path='start' component={Start}></Route>
+        <Route path='new' component={NewModal}></Route>
+        <Route path='folders' component={Folders}></Route>
       </Route>
     </Router>
-  </Provider>), document.getElementById('root'));
+</Provider>), document.getElementById('root'));
 }
 
 function save() {
@@ -52,9 +57,11 @@ function save() {
 }
 
 function init () {
-  run();
+  run(); //initialize routing function above
+  // Listen for changes to the store then run events
   store.subscribe(run);
   store.subscribe(save);
+  // Dispatch sends action to the reducer which then changes state
   store.dispatch(fetchData());
 }
 

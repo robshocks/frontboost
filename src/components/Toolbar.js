@@ -10,7 +10,7 @@ const mapDispatchToProps = dispatch => ({
 
 const Toolbar = ({ deckId, showAddDeck, onFilter }) => {
   let deckTools = deckId ? (<div>
-    <Link className='btn' to={`/deck/${deckId}/new`}> ✚ New Card </Link>
+    <Link className='btn' to={`/deck/${deckId}/new`}>New Template </Link>
     <Link className='btn' to={`/deck/${deckId}/study`}> Study Deck </Link>
 
     <input 
@@ -22,7 +22,7 @@ const Toolbar = ({ deckId, showAddDeck, onFilter }) => {
 
   return (<div className='toolbar'>
       <div>
-        <button onClick={showAddDeck}> ✚ New Deck </button>
+        <button onClick={showAddDeck}>New Folder</button>
       </div>
       {deckTools}
   </div>);

@@ -11,8 +11,9 @@ const mapStateToProps = ({ cards, cardFilter }, { params: { deckId } }) => ({
   cards: cards.filter(c => c.deckId === deckId && matches(cardFilter, c))
 });
 
-const Cards = ({ cards, children }) => {
+const Cards = ({ cards, children, deckId }) => {
   return (<div className='main'> 
+          <div><h1>Folder Name</h1></div>
     {cards.map(card => <Card card={card} key={card.id} />)}
     {children}
   </div>);

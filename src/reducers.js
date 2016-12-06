@@ -6,7 +6,7 @@ export const showBack = (state, action) => {
       return state || false;
   }
 };
-
+// {cardFilter: data or ''}
 export const cardFilter = (state, action) => {
   switch (action.type) {
     case 'FILTER_CARDS':
@@ -30,7 +30,7 @@ export const cards = (state, action) => {
     case 'UPDATE_CARD':
       let cardUpdate = action.data;
       return state.map(card => (card.id !== cardUpdate.id) ?
-        card : 
+        card :
         Object.assign({}, card, cardUpdate)
       );
     case 'DELETE_CARD':
@@ -51,7 +51,7 @@ export const decks = (state, action) => {
       return state || [];
   }
 };
-
+// {addingDeck: true }}
 export const addingDeck = (state, action) => {
   switch (action.type) {
     case 'SHOW_ADD_DECK': return true;
@@ -60,3 +60,18 @@ export const addingDeck = (state, action) => {
   }
 };
 
+export const addingFolder = (state, action) => {
+        switch (action.type) {
+            case 'ADD_MODAL_FOLDER': return true;
+            default: return !!state;
+        }
+};
+
+export const addingFromModal = (state, action) => {
+      switch (action.type) {
+        case 'ADD_MODAL_FOLD': return 'folderShow';
+        case 'ADD_MODAL_PROCESS': return 'processShow';
+        case 'SHOW_MODAL_DEFAULT': return 'defaultAdd';
+        default: return state || 'defaultAdd';
+      }
+};

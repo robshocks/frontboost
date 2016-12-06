@@ -1,4 +1,4 @@
-html, body, #root, .app {
+html, body {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
@@ -111,7 +111,7 @@ button.delete {
 }
 
 .modal {
-    position: absolute; 
+    position: absolute;
     top: 100px;
     left: 423px;
     background:#f6f6f6;
@@ -215,7 +215,7 @@ button.delete {
 }
 
 .no-cards,
-.study-card .front div:first-child, 
+.study-card .front div:first-child,
 .study-card .back div:first-child {
     display: flex;
     align-items: center;
@@ -234,7 +234,7 @@ button.delete {
 }
 .study-card .front .btn,
 .study-card .back .btn,
-.study-card .front button, 
+.study-card .front button,
 .study-card .back button {
     margin: 0 5px 0 5px;
 }
