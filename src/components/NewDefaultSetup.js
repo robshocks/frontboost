@@ -12,6 +12,8 @@ const mapDispatchToProps = dispatch => ({
 
 const NewDefaultSetup = React.createClass({
   render() {
+    // Props are made available by Connect
+  
     return(
       <div>
         <button onClick={this.showFolderSetup} className="btn col-xs-6 col-xs-offset-3  btn-lg text-center btn-primary m-b">Folder</button>

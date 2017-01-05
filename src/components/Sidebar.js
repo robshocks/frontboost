@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { addFolder, showAddDeck, hideAddDeck, modalShowDef } from '../actions';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 const mapStateToProps = ({ folders, addingFolder }) => ({
   folders,
@@ -23,7 +23,9 @@ const Sidebar = React.createClass({
   },
   render() {
     let props = this.props;
-    console.log(props);
+    //console.log(props);
+    //console.log(props.folderId);
+    //console.log(props.children);
 
     return (
       <aside id="aside" className="app-aside hidden-xs bg-white">
@@ -48,7 +50,7 @@ const Sidebar = React.createClass({
                                 <i className="fa fa-fw fa-angle-down text-active"></i>
                               </span>
                               <i className="fa fa-folder icon text-primary"></i>
-                              <span className="font-bold">Folders</span>
+                              <span className="font-bold">Folders1</span>
                             </Link>
                             {/*
                             <ul>

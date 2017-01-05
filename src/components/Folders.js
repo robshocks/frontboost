@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 
-const mapStateToProps = ({ folders, addingFolder }) => ({
+const mapStateToProps = ({ cards, cardFilter, folders, addingFolder }) => ({
   folders,
   addingFolder
 });
@@ -20,13 +20,16 @@ const Folders = React.createClass({
     render() {
       let props = this.props;
 
+//      console.log('params next');
+//console.log(props.params);
+//console.log(props.processes);
         return(
           <div className="temp contain">
               <div className="bg-light lter b-b wrapper-md">
                   <div className="row">
                 <div className="col-sm-6 col-xs-12">
                     <h1 className="m-n font-thin h3 text-black">Folder</h1>
-                    <small className="text-muted">All processes listed here</small>
+                    <small className="text-muted">All processes listed here now</small>
                 </div>
                   </div>
               </div>
@@ -48,10 +51,11 @@ const Folders = React.createClass({
                   <div key={i} className="row">
 
                 <div className=" col-sm-5 list-group-lg list-group-sp">
-                    <Link to={`/folder/${folder.id}`} className="list-group-item clearfix m-b">
+
+                    <Link to={`/folder/${folder.name}`} className="list-group-item clearfix m-b">
 
                   <span className="clear">
-                      <span>{folder.name}</span>
+                      <span>{folder.name} Test</span>
                       <small className="text-muted clear text-ellipsis">Description</small>
                   </span>
                 </Link>

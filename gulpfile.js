@@ -41,5 +41,5 @@ gulp.task('watch', function() {
   gulp.watch('src/stylesheets/**/*.less', ['styles']);
 });
 
-gulp.task('default', ['styles', 'vendor', 'browserify-watch', 'watch']);
+gulp.task('default', ['styles', 'watch']);
 gulp.task('build', ['styles']);

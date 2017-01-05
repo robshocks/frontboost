@@ -7,26 +7,39 @@ import Start from './Start';
 import NewModal from './NewModal';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (props, { params: { deckId } }) => ({
-  deckId
+// const mapStateToProps = (props, children, { params: { folderId } }) => ({
+//   folderId
+// });
+const mapStateToProps = ({ folders, addingFolder }) => ({
+  folders,
+  addingFolder
 });
 
-const App = ({ deckId, children }) => {
-  return (<div className='app'>
-    <NewModal/>
-      <Navbar />
-      {/*}<Toolbar/>*/}
-      <Sidebar deckId={[{ name: 'Deck 1'}]} addingDeck={true}/>
-        <div className="app-content">
-        <div className="app-content-body fade-in-up">
-    {children}
+const App = React.createClass({
+  render() {
+let props = this.props;
+console.log('App Props')
+//console.log(props);
+console.log(props.params.folderId);
+console.log(props.children);
+  return(
+    <div className='app'>
+      <NewModal folderId={props.params.folderId} />
+        <Navbar />
+        {/*}<Toolbar/>*/}
+        <Sidebar folderId={props.params.folderId}  />
+          <div className="app-content">
+          <div className="app-content-body fade-in-up">
+      {props.children}
+        </div>
       </div>
-    </div>
 
-      <Footer/>
+        <Footer/>
+        </div>
+  );
+  }
+});
 
 
-  </div>);
-};
 
 export default connect(mapStateToProps)(App);

@@ -4,13 +4,15 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import thunkMiddleware from 'redux-thunk';
+import thunkMiddleware from 'redux-thunk'; // Handls Async actions like a promise
 import { fetchData } from './actions';
 import * as reducers from './reducers';
 reducers.routing = routerReducer;
 
+
+
 import App from './components/App';
-import VisibleCards from './components/VisibleCards';
+import FolderContents from './components/FolderContents';
 import NewCardModal from './components/NewCardModal';
 import EditCardModal from './components/EditCardModal';
 import StudyModal from './components/StudyModal';
@@ -24,10 +26,12 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 function run () {
   let state = store.getState();
+
   ReactDOM.render((<Provider store={store}>
+
     <Router history={history}>
       <Route path='/' component={App}>
-        <Route path='/folder/:folderId' component={VisibleCards}>
+        <Route path='/folder/:folderId' component={FolderContents}>
           <Route path='/folder/:folderId/new' component={NewCardModal} />
           <Route path='/folder/:folderId/edit/:cardId' component={EditCardModal} />
           <Route path='/folder/:folderId/study' component={StudyModal} />
@@ -50,7 +54,7 @@ function save() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      decks: state.decks,
+      decks: state.folders,
       cards: state.cards
     })
   });
@@ -62,7 +66,7 @@ function init () {
   store.subscribe(run);
   store.subscribe(save);
   // Dispatch sends action to the reducer which then changes state
-  //store.dispatch(fetchData());
+  store.dispatch(fetchData());
 }
 
 init();

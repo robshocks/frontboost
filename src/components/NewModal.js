@@ -11,6 +11,7 @@ const mapStateToProps = ({ decks, addingDeck, addingFolder, addingFromModal }) =
   addingDeck,
   addingFolder,
   addingFromModal
+
 });
 // Dispatch from props to the state
 const mapDispatchToProps = dispatch => ({
@@ -26,8 +27,11 @@ const Arse = React.createClass({
 
   render() {
     // Props are made available by Connect
-    let props = this.props;
+
     //console.log(props);
+    let props = this.props;
+    console.log('New Modal Folderid')
+  console.log(props.folderId);
 
 
   return (
@@ -40,9 +44,9 @@ const Arse = React.createClass({
                     </div>
                     <div className="modal-body">
                         <div className="row">
-                                { props.addingFromModal == 'defaultAdd' &&   <NewDefaultSetup/>}
-                                { props.addingFromModal == 'folderShow' &&   <NewFolderSetup/>}
-                                { props.addingFromModal == 'processShow' && <NewProcSetup/>}
+                                { props.addingFromModal == 'defaultAdd' &&   <NewDefaultSetup folderId={props.folderId}/>}
+                                { props.addingFromModal == 'folderShow' &&   <NewFolderSetup folderId={props.folderId}/>}
+                                { props.addingFromModal == 'processShow' && <NewProcSetup folderId={props.folderId}/>}
                       </div>
                     </div>
                 </div>

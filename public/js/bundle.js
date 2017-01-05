@@ -28074,6 +28074,9 @@ var modalShowDef = exports.modalShowDef = function modalShowDef() {
 var addCard = exports.addCard = function addCard(card) {
   return { type: 'ADD_CARD', data: card };
 };
+var addProcess = exports.addProcess = function addProcess(name, folderDets) {
+  return { type: 'ADD_PROCESS', data: name, dets: folderDets };
+};
 var updateCard = exports.updateCard = function updateCard(card) {
   return { type: 'UPDATE_CARD', data: card };
 };
@@ -28091,6 +28094,17 @@ var setShowBack = exports.setShowBack = function setShowBack(back) {
 var receiveData = exports.receiveData = function receiveData(data) {
   return { type: 'RECEIVE_DATA', data: data };
 };
+
+var fetchData = exports.fetchData = function fetchData() {
+  return function (dispatch) {
+    fetch('/api/data').then(function (res) {
+      return res.json();
+    }).then(function (json) {
+      return dispatch(receiveData(json));
+    });
+  };
+};
+//Maybe add a spinner here and error control
 
 },{}],270:[function(require,module,exports){
 'use strict';
@@ -28125,9 +28139,9 @@ var _App = require('./components/App');
 
 var _App2 = _interopRequireDefault(_App);
 
-var _VisibleCards = require('./components/VisibleCards');
+var _FolderContents = require('./components/FolderContents');
 
-var _VisibleCards2 = _interopRequireDefault(_VisibleCards);
+var _FolderContents2 = _interopRequireDefault(_FolderContents);
 
 var _NewCardModal = require('./components/NewCardModal');
 
@@ -28157,6 +28171,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Handls Async actions like a promise
 reducers.routing = _reactRouterRedux.routerReducer;
 
 // Initial store is created by running through reducer list and returning default values
@@ -28166,6 +28181,7 @@ var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHi
 
 function run() {
   var state = store.getState();
+
   _reactDom2.default.render(_react2.default.createElement(
     _reactRedux.Provider,
     { store: store },
@@ -28177,7 +28193,7 @@ function run() {
         { path: '/', component: _App2.default },
         _react2.default.createElement(
           _reactRouter.Route,
-          { path: '/folder/:folderId', component: _VisibleCards2.default },
+          { path: '/folder/:folderId', component: _FolderContents2.default },
           _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/new', component: _NewCardModal2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/edit/:cardId', component: _EditCardModal2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/folder/:folderId/study', component: _StudyModal2.default })
@@ -28200,7 +28216,7 @@ function save() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      decks: state.decks,
+      decks: state.folders,
       cards: state.cards
     })
   });
@@ -28212,12 +28228,12 @@ function init() {
   store.subscribe(run);
   store.subscribe(save);
   // Dispatch sends action to the reducer which then changes state
-  //store.dispatch(fetchData());
+  store.dispatch((0, _actions.fetchData)());
 }
 
 init();
 
-},{"./actions":269,"./components/App":271,"./components/EditCardModal":274,"./components/Folders":275,"./components/NewCardModal":278,"./components/NewModal":281,"./components/Start":284,"./components/StudyModal":285,"./components/VisibleCards":287,"./reducers":288,"react":255,"react-dom":62,"react-redux":65,"react-router":104,"react-router-redux":71,"redux":262,"redux-thunk":256}],271:[function(require,module,exports){
+},{"./actions":269,"./components/App":271,"./components/EditCardModal":274,"./components/FolderContents":275,"./components/Folders":276,"./components/NewCardModal":279,"./components/NewModal":282,"./components/Start":285,"./components/StudyModal":286,"./reducers":288,"react":255,"react-dom":62,"react-redux":65,"react-router":104,"react-router-redux":71,"redux":262,"redux-thunk":256}],271:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28256,39 +28272,49 @@ var _reactRedux = require('react-redux');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mapStateToProps = function mapStateToProps(props, _ref) {
-  var deckId = _ref.params.deckId;
+// const mapStateToProps = (props, children, { params: { folderId } }) => ({
+//   folderId
+// });
+var mapStateToProps = function mapStateToProps(_ref) {
+  var folders = _ref.folders,
+      addingFolder = _ref.addingFolder;
   return {
-    deckId: deckId
+    folders: folders,
+    addingFolder: addingFolder
   };
 };
 
-var App = function App(_ref2) {
-  var deckId = _ref2.deckId,
-      children = _ref2.children;
-
-  return _react2.default.createElement(
-    'div',
-    { className: 'app' },
-    _react2.default.createElement(_NewModal2.default, null),
-    _react2.default.createElement(_Navbar2.default, null),
-    _react2.default.createElement(_Sidebar2.default, { deckId: [{ name: 'Deck 1' }], addingDeck: true }),
-    _react2.default.createElement(
+var App = _react2.default.createClass({
+  displayName: 'App',
+  render: function render() {
+    var props = this.props;
+    console.log('App Props');
+    //console.log(props);
+    console.log(props.params.folderId);
+    console.log(props.children);
+    return _react2.default.createElement(
       'div',
-      { className: 'app-content' },
+      { className: 'app' },
+      _react2.default.createElement(_NewModal2.default, { folderId: props.params.folderId }),
+      _react2.default.createElement(_Navbar2.default, null),
+      _react2.default.createElement(_Sidebar2.default, { folderId: props.params.folderId }),
       _react2.default.createElement(
         'div',
-        { className: 'app-content-body fade-in-up' },
-        children
-      )
-    ),
-    _react2.default.createElement(_Footer2.default, null)
-  );
-};
+        { className: 'app-content' },
+        _react2.default.createElement(
+          'div',
+          { className: 'app-content-body fade-in-up' },
+          props.children
+        )
+      ),
+      _react2.default.createElement(_Footer2.default, null)
+    );
+  }
+});
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
 
-},{"./Footer":276,"./Navbar":277,"./NewModal":281,"./Sidebar":283,"./Start":284,"./Toolbar":286,"react":255,"react-redux":65}],272:[function(require,module,exports){
+},{"./Footer":277,"./Navbar":278,"./NewModal":282,"./Sidebar":284,"./Start":285,"./Toolbar":287,"react":255,"react-redux":65}],272:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28472,6 +28498,179 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Card = require('./Card');
+
+var _Card2 = _interopRequireDefault(_Card);
+
+var _reactRedux = require('react-redux');
+
+var _fuzzysearch = require('fuzzysearch');
+
+var _fuzzysearch2 = _interopRequireDefault(_fuzzysearch);
+
+var _reactRouter = require('react-router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var matches = function matches(filter, processes) {
+  return (0, _fuzzysearch2.default)(filter, card.front) || (0, _fuzzysearch2.default)(filter, card.back);
+};
+
+{/*
+  const mapStateToProps = ({ cards, cardFilter, folders }, { params: { folderId } }) => ({
+   cards: cards.filter(c => c.deckId === deckId && matches(cardFilter, c))
+  });
+  */}
+
+var mapStateToProps = function mapStateToProps(_ref, _ref2) {
+  var cards = _ref.cards,
+      cardFilter = _ref.cardFilter,
+      folders = _ref.folders,
+      addingFolder = _ref.addingFolder,
+      processes = _ref.processes;
+  var folderId = _ref2.params.folderId;
+  return {
+    folders: folders,
+    addingFolder: addingFolder,
+    folderId: folderId,
+    processes: processes //: processes.filter(c => c.folderId === folderId )
+  };
+};
+
+var Cards = _react2.default.createClass({
+  displayName: 'Cards',
+  render: function render() {
+    var props = this.props;
+    console.log('here come the prop processes');
+    console.log(props.processes);
+    return _react2.default.createElement(
+      'div',
+      { className: 'temp contain' },
+      _react2.default.createElement(
+        'div',
+        { className: 'bg-light lter b-b wrapper-md' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-6 col-xs-12' },
+            _react2.default.createElement(
+              'h1',
+              { className: 'm-n font-thin h3 text-black' },
+              'Folder: ',
+              props.folderId
+            ),
+            _react2.default.createElement(
+              'small',
+              { className: 'text-muted' },
+              'All processes listed here'
+            )
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'wrapper-md' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row m-b' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-5' },
+            _react2.default.createElement(
+              'div',
+              { className: 'input-group' },
+              _react2.default.createElement('input', { type: 'text', className: 'form-control input-lg', placeholder: 'Enter Search Term' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'input-group-btn' },
+                _react2.default.createElement(
+                  'button',
+                  { className: 'btn btn-primary btn-lg', type: 'button' },
+                  'Search'
+                )
+              )
+            )
+          )
+        ),
+        props.processes.map(function (process, i) {
+          return _react2.default.createElement(
+            'div',
+            { key: i, className: 'row' },
+            'console.log()',
+            _react2.default.createElement(
+              'div',
+              { className: ' col-sm-5 list-group-lg list-group-sp' },
+              _react2.default.createElement(
+                _reactRouter.Link,
+                { to: '/folder/' + process.id, className: 'list-group-item clearfix m-b' },
+                _react2.default.createElement(
+                  'span',
+                  { className: 'clear' },
+                  _react2.default.createElement(
+                    'span',
+                    null,
+                    process.id,
+                    ' Test'
+                  ),
+                  _react2.default.createElement(
+                    'small',
+                    { className: 'text-muted clear text-ellipsis' },
+                    'Description'
+                  )
+                )
+              )
+            )
+          );
+        })
+      )
+    );
+  }
+});
+
+{/*
+  const Cards = ({ cards, children, folderId, folders, folder }) => {
+   return (
+      <div className="temp contain">
+       <div className="bg-light lter b-b wrapper-md">
+           <div className="row">
+         <div className="col-sm-6 col-xs-12">
+             <h1 className="m-n font-thin h3 text-black">Folder Contents{}</h1>
+             <small className="text-muted">All processes listed here</small>
+         </div>
+           </div>
+       </div>
+       <div className="wrapper-md">
+           <div className="row m-b">
+         <div className="col-sm-5">
+             <div className="input-group">
+           <input type="text" className="form-control input-lg" placeholder="Enter Search Term"/>
+           <span className="input-group-btn">
+               <button className="btn btn-primary btn-lg" type="button">Search</button>
+           </span>
+             </div>
+         </div>
+           </div>
+  
+  
+        </div>
+         </div>);
+  };
+  */}
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Cards);
+
+},{"./Card":272,"fuzzysearch":29,"react":255,"react-redux":65,"react-router":104}],276:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _reactRedux = require('react-redux');
 
 var _reactRouter = require('react-router');
@@ -28479,7 +28678,9 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mapStateToProps = function mapStateToProps(_ref) {
-  var folders = _ref.folders,
+  var cards = _ref.cards,
+      cardFilter = _ref.cardFilter,
+      folders = _ref.folders,
       addingFolder = _ref.addingFolder;
   return {
     folders: folders,
@@ -28549,6 +28750,9 @@ var Folders = _react2.default.createClass({
   render: function render() {
     var props = this.props;
 
+    //      console.log('params next');
+    //console.log(props.params);
+    //console.log(props.processes);
     return _react2.default.createElement(
       'div',
       { className: 'temp contain' },
@@ -28569,7 +28773,7 @@ var Folders = _react2.default.createClass({
             _react2.default.createElement(
               'small',
               { className: 'text-muted' },
-              'All processes listed here'
+              'All processes listed here now'
             )
           )
         )
@@ -28608,14 +28812,15 @@ var Folders = _react2.default.createClass({
               { className: ' col-sm-5 list-group-lg list-group-sp' },
               _react2.default.createElement(
                 _reactRouter.Link,
-                { to: '/folder/' + folder.id, className: 'list-group-item clearfix m-b' },
+                { to: '/folder/' + folder.name, className: 'list-group-item clearfix m-b' },
                 _react2.default.createElement(
                   'span',
                   { className: 'clear' },
                   _react2.default.createElement(
                     'span',
                     null,
-                    folder.name
+                    folder.name,
+                    ' Test'
                   ),
                   _react2.default.createElement(
                     'small',
@@ -28660,7 +28865,7 @@ var Folders = _react2.default.createClass({
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Folders);
 
-},{"react":255,"react-redux":65,"react-router":104}],276:[function(require,module,exports){
+},{"react":255,"react-redux":65,"react-router":104}],277:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28712,7 +28917,7 @@ var Footer = _react2.default.createClass({
 
 exports.default = Footer;
 
-},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],277:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],278:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28764,7 +28969,7 @@ var Navbar = _react2.default.createClass({
 
 exports.default = Navbar;
 
-},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],278:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],279:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28798,7 +29003,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_CardModal2.default);
 
-},{"../actions":269,"./CardModal":273,"react-redux":65}],279:[function(require,module,exports){
+},{"../actions":269,"./CardModal":273,"react-redux":65}],280:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28836,6 +29041,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var NewDefaultSetup = _react2.default.createClass({
   displayName: 'NewDefaultSetup',
   render: function render() {
+    // Props are made available by Connect
+
     return _react2.default.createElement(
       'div',
       null,
@@ -28861,7 +29068,7 @@ var NewDefaultSetup = _react2.default.createClass({
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NewDefaultSetup);
 
-},{"../actions":269,"react":255,"react-redux":65}],280:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-redux":65}],281:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28923,7 +29130,7 @@ var NewFolderSetup = _react2.default.createClass({
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NewFolderSetup);
 
-},{"../actions":269,"react":255,"react-dom":62,"react-redux":65}],281:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65}],282:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28967,6 +29174,7 @@ var mapStateToProps = function mapStateToProps(_ref) {
     addingDeck: addingDeck,
     addingFolder: addingFolder,
     addingFromModal: addingFromModal
+
   };
 };
 // Dispatch from props to the state
@@ -28997,9 +29205,11 @@ var Arse = _react2.default.createClass({
   displayName: 'Arse',
   render: function render() {
     // Props are made available by Connect
-    var props = this.props;
-    //console.log(props);
 
+    //console.log(props);
+    var props = this.props;
+    console.log('New Modal Folderid');
+    console.log(props.folderId);
 
     return _react2.default.createElement(
       'div',
@@ -29030,9 +29240,9 @@ var Arse = _react2.default.createClass({
             _react2.default.createElement(
               'div',
               { className: 'row' },
-              props.addingFromModal == 'defaultAdd' && _react2.default.createElement(_NewDefaultSetup2.default, null),
-              props.addingFromModal == 'folderShow' && _react2.default.createElement(_NewFolderSetup2.default, null),
-              props.addingFromModal == 'processShow' && _react2.default.createElement(_NewProcSetup2.default, null)
+              props.addingFromModal == 'defaultAdd' && _react2.default.createElement(_NewDefaultSetup2.default, { folderId: props.folderId }),
+              props.addingFromModal == 'folderShow' && _react2.default.createElement(_NewFolderSetup2.default, { folderId: props.folderId }),
+              props.addingFromModal == 'processShow' && _react2.default.createElement(_NewProcSetup2.default, { folderId: props.folderId })
             )
           )
         )
@@ -29049,62 +29259,109 @@ var Arse = _react2.default.createClass({
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Arse);
 
-},{"../actions":269,"./NewDefaultSetup":279,"./NewFolderSetup":280,"./NewProcSetup":282,"react":255,"react-dom":62,"react-redux":65}],282:[function(require,module,exports){
-"use strict";
+},{"../actions":269,"./NewDefaultSetup":280,"./NewFolderSetup":281,"./NewProcSetup":283,"react":255,"react-dom":62,"react-redux":65}],283:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _actions = require('../actions');
+
+var _reactRedux = require('react-redux');
+
+var _reactRouter = require('react-router');
+
+var _NewModal = require('./NewModal');
+
+var _NewModal2 = _interopRequireDefault(_NewModal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NewProcSetup = function NewProcSetup() {
-  return _react2.default.createElement(
-    "div",
-    { className: "col-sm-12" },
-    _react2.default.createElement(
-      "div",
-      { className: "form-group" },
-      _react2.default.createElement(
-        "select",
-        { className: "form-control input-lg", id: "sel1" },
-        _react2.default.createElement(
-          "option",
-          { value: "", disabled: true, selected: true },
-          "Choose Folder"
-        ),
-        _react2.default.createElement(
-          "option",
-          null,
-          "Folder Name One"
-        ),
-        _react2.default.createElement(
-          "option",
-          null,
-          "Folder Name Two"
-        ),
-        _react2.default.createElement(
-          "option",
-          null,
-          "Folder Name Three"
-        )
-      )
-    ),
-    _react2.default.createElement("input", { type: "text", className: "form-control input-lg", placeholder: "Enter Process Name" }),
-    _react2.default.createElement(
-      "button",
-      { className: "btn col-xs-12 btn-lg text-center btn-primary m-b m-t" },
-      "Create Process"
-    )
-  );
+var mapStateToProps = function mapStateToProps(_ref) {
+  var folders = _ref.folders,
+      processes = _ref.processes,
+      addingFolder = _ref.addingFolder;
+  return {
+    folders: folders,
+    processes: processes,
+    addingFolder: addingFolder
+  };
 };
-exports.default = NewProcSetup;
 
-},{"react":255}],283:[function(require,module,exports){
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    addProcess: function addProcess(name, folderDets) {
+      return dispatch((0, _actions.addProcess)(name, folderDets));
+    },
+    showAddDeck: function showAddDeck() {
+      return dispatch((0, _actions.showAddDeck)());
+    },
+    hideAddDeck: function hideAddDeck() {
+      return dispatch((0, _actions.hideAddDeck)());
+    },
+    modalShowDef: function modalShowDef() {
+      return dispatch((0, _actions.modalShowDef)());
+    }
+  };
+};
+
+var NewProcSetup = _react2.default.createClass({
+  displayName: 'NewProcSetup',
+  render: function render() {
+    var props = this.props;
+    console.log('New Proc Folder Id');
+    console.log(props);
+    console.log(props.folderId);
+
+    return _react2.default.createElement(
+      'div',
+      { className: 'col-sm-12' },
+      _react2.default.createElement(
+        'div',
+        { className: 'form-group' },
+        _react2.default.createElement(
+          'select',
+          { ref: 'selectFolderDrop', className: 'form-control input-lg', id: 'sel1' },
+          props.folders.map(function (folder, i) {
+            return _react2.default.createElement(
+              'option',
+              { key: i, ref: folder.id },
+              folder.name
+            );
+          })
+        )
+      ),
+      _react2.default.createElement('input', { type: 'text', ref: 'addProcess', className: 'form-control input-lg', placeholder: 'Enter Process Name' }),
+      _react2.default.createElement(
+        'button',
+        { onClick: this.addProcess, className: 'btn col-xs-12 btn-lg text-center btn-primary m-b m-t' },
+        'Create Process'
+      )
+    );
+  },
+  addProcess: function addProcess(evt) {
+
+    var name = _reactDom2.default.findDOMNode(this.refs.addProcess).value;
+    var folderDets = _reactDom2.default.findDOMNode(this.refs.selectFolderDrop).value;
+    //var folderDets = (this.props.folderId);
+    console.log('You Selected Folder ' + folderDets);
+    console.log('You selected Process ' + name);
+    this.props.addProcess(name, folderDets);
+  }
+});
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NewProcSetup);
+
+},{"../actions":269,"./NewModal":282,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],284:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29161,7 +29418,9 @@ var Sidebar = _react2.default.createClass({
   },
   render: function render() {
     var props = this.props;
-    console.log(props);
+    //console.log(props);
+    //console.log(props.folderId);
+    //console.log(props.children);
 
     return _react2.default.createElement(
       'aside',
@@ -29209,7 +29468,7 @@ var Sidebar = _react2.default.createClass({
                   _react2.default.createElement(
                     'span',
                     { className: 'font-bold' },
-                    'Folders'
+                    'Folders1'
                   )
                 )
               ),
@@ -29261,7 +29520,7 @@ var Sidebar = _react2.default.createClass({
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Sidebar);
 
-},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],284:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],285:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29398,7 +29657,7 @@ var Start = _react2.default.createClass({
 
 exports.default = Start;
 
-},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],285:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-dom":62,"react-redux":65,"react-router":104}],286:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29547,7 +29806,7 @@ var StudyModal = function StudyModal(_ref3) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(StudyModal);
 
-},{"../actions":269,"react":255,"react-redux":65,"react-router":104}],286:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-redux":65,"react-router":104}],287:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29622,70 +29881,7 @@ var Toolbar = function Toolbar(_ref) {
 
 exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(Toolbar);
 
-},{"../actions":269,"react":255,"react-redux":65,"react-router":104}],287:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Card = require('./Card');
-
-var _Card2 = _interopRequireDefault(_Card);
-
-var _reactRedux = require('react-redux');
-
-var _fuzzysearch = require('fuzzysearch');
-
-var _fuzzysearch2 = _interopRequireDefault(_fuzzysearch);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var matches = function matches(filter, card) {
-  return (0, _fuzzysearch2.default)(filter, card.front) || (0, _fuzzysearch2.default)(filter, card.back);
-};
-
-var mapStateToProps = function mapStateToProps(_ref, _ref2) {
-  var cards = _ref.cards,
-      cardFilter = _ref.cardFilter;
-  var deckId = _ref2.params.deckId;
-  return {
-    cards: cards.filter(function (c) {
-      return c.deckId === deckId && matches(cardFilter, c);
-    })
-  };
-};
-
-var Cards = function Cards(_ref3) {
-  var cards = _ref3.cards,
-      children = _ref3.children,
-      deckId = _ref3.deckId;
-
-  return _react2.default.createElement(
-    'div',
-    { className: 'main' },
-    _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'h1',
-        null,
-        'Folder Name'
-      )
-    ),
-    cards.map(function (card) {
-      return _react2.default.createElement(_Card2.default, { card: card, key: card.id });
-    }),
-    children
-  );
-};
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(Cards);
-
-},{"./Card":272,"fuzzysearch":29,"react":255,"react-redux":65}],288:[function(require,module,exports){
+},{"../actions":269,"react":255,"react-redux":65,"react-router":104}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29694,14 +29890,14 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var showBack = exports.showBack = function showBack(state, action) {
-  switch (action.type) {
-    case 'SHOW_BACK':
-      return action.data || false;
-    default:
-      return state || false;
-  }
-};
+// export const showBack = (state, action) => {
+//   switch(action.type) {
+//     case 'SHOW_BACK':
+//       return action.data || false;
+//     default:
+//       return state || false;
+//   }
+// };
 // {cardFilter: data or ''}
 var cardFilter = exports.cardFilter = function cardFilter(state, action) {
   switch (action.type) {
@@ -29762,17 +29958,34 @@ var folders = exports.folders = function folders(state, action) {
       return state || [];
   }
 };
-// {addingDeck: true }}
-var addingDeck = exports.addingDeck = function addingDeck(state, action) {
+var processes = exports.processes = function processes(state, action) {
+  console.log('action dets' + action.dets);
   switch (action.type) {
-    case 'SHOW_ADD_DECK':
-      return true;
-    case 'HIDE_ADD_DECK':
-      return false;
+    case 'RECEIVE_DATA':
+      return action.data.processes || state;
+    case 'ADD_PROCESS':
+      var newProcess = Object.assign({}, action.data, {
+        score: 1,
+        id: +new Date(),
+        folderId: action.dets
+      });
+      return state.concat([newProcess]);
+    //
+    // let newProcess = { name: action.data, id: +new Date };
+    // return state.concat([newProcess]);
     default:
-      return !!state;
+      return state || [];
   }
 };
+
+// {addingDeck: true }}
+// export const addingDeck = (state, action) => {
+//   switch (action.type) {
+//     case 'SHOW_ADD_DECK': return true;
+//     case 'HIDE_ADD_DECK': return false;
+//     default: return !!state;
+//   }
+// };
 
 var addingFolder = exports.addingFolder = function addingFolder(state, action) {
   switch (action.type) {

@@ -1,11 +1,11 @@
-export const showBack = (state, action) => {
-  switch(action.type) {
-    case 'SHOW_BACK':
-      return action.data || false;
-    default:
-      return state || false;
-  }
-};
+// export const showBack = (state, action) => {
+//   switch(action.type) {
+//     case 'SHOW_BACK':
+//       return action.data || false;
+//     default:
+//       return state || false;
+//   }
+// };
 // {cardFilter: data or ''}
 export const cardFilter = (state, action) => {
   switch (action.type) {
@@ -51,14 +51,36 @@ export const folders = (state, action) => {
       return state || [];
   }
 };
-// {addingDeck: true }}
-export const addingDeck = (state, action) => {
+export const processes = (state, action) => {
+console.log('action dets'+ action.dets);
   switch (action.type) {
-    case 'SHOW_ADD_DECK': return true;
-    case 'HIDE_ADD_DECK': return false;
-    default: return !!state;
+    case 'RECEIVE_DATA':
+      return action.data.processes || state;
+    case 'ADD_PROCESS':
+      let newProcess = Object.assign({}, action.data, {
+      score: 1,
+      id: +new Date,
+      folderId: action.dets
+      });
+      return state.concat([newProcess]);
+      //
+      // let newProcess = { name: action.data, id: +new Date };
+      // return state.concat([newProcess]);
+    default:
+      return state || [];
   }
 };
+
+
+
+// {addingDeck: true }}
+// export const addingDeck = (state, action) => {
+//   switch (action.type) {
+//     case 'SHOW_ADD_DECK': return true;
+//     case 'HIDE_ADD_DECK': return false;
+//     default: return !!state;
+//   }
+// };
 
 export const addingFolder = (state, action) => {
         switch (action.type) {
