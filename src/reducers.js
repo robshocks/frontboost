@@ -52,12 +52,14 @@ export const folders = (state, action) => {
   }
 };
 export const processes = (state, action) => {
-console.log('action dets'+ action.dets);
+console.log('action process name '+ action.processName);
+console.log('action dets '+ action.dets);
   switch (action.type) {
     case 'RECEIVE_DATA':
       return action.data.processes || state;
     case 'ADD_PROCESS':
-      let newProcess = Object.assign({}, action.data, {
+      let newProcess = Object.assign({}, {
+      processName: action.processName,
       score: 1,
       id: +new Date,
       folderId: action.dets

@@ -18,7 +18,7 @@ const mapStateToProps = ({ cards, cardFilter, folders, addingFolder, processes }
   folders,
   addingFolder,
   folderId,
-  processes//: processes.filter(c => c.folderId === folderId )
+  processes: processes.filter(p => p.folderId === folderId )
 });
 
 const Cards = React.createClass({
@@ -51,13 +51,12 @@ console.log(props.processes);
 
               {props.processes.map((process, i) =>
               <div key={i} className="row">
-console.log()
             <div className=" col-sm-5 list-group-lg list-group-sp">
 
-                <Link to={`/folder/${process.id}`} className="list-group-item clearfix m-b">
+                <Link to={`/folder/${process.name}`} className="list-group-item clearfix m-b">
 
               <span className="clear">
-                  <span>{process.id} Test</span>
+                  <span>{process.processName}</span>
                   <small className="text-muted clear text-ellipsis">Description</small>
               </span>
             </Link>

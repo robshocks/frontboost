@@ -28075,7 +28075,7 @@ var addCard = exports.addCard = function addCard(card) {
   return { type: 'ADD_CARD', data: card };
 };
 var addProcess = exports.addProcess = function addProcess(name, folderDets) {
-  return { type: 'ADD_PROCESS', data: name, dets: folderDets };
+  return { type: 'ADD_PROCESS', processName: name, dets: folderDets };
 };
 var updateCard = exports.updateCard = function updateCard(card) {
   return { type: 'UPDATE_CARD', data: card };
@@ -28533,7 +28533,9 @@ var mapStateToProps = function mapStateToProps(_ref, _ref2) {
     folders: folders,
     addingFolder: addingFolder,
     folderId: folderId,
-    processes: processes //: processes.filter(c => c.folderId === folderId )
+    processes: processes.filter(function (p) {
+      return p.folderId === folderId;
+    })
   };
 };
 
@@ -28598,21 +28600,19 @@ var Cards = _react2.default.createClass({
           return _react2.default.createElement(
             'div',
             { key: i, className: 'row' },
-            'console.log()',
             _react2.default.createElement(
               'div',
               { className: ' col-sm-5 list-group-lg list-group-sp' },
               _react2.default.createElement(
                 _reactRouter.Link,
-                { to: '/folder/' + process.id, className: 'list-group-item clearfix m-b' },
+                { to: '/folder/' + process.name, className: 'list-group-item clearfix m-b' },
                 _react2.default.createElement(
                   'span',
                   { className: 'clear' },
                   _react2.default.createElement(
                     'span',
                     null,
-                    process.id,
-                    ' Test'
+                    process.processName
                   ),
                   _react2.default.createElement(
                     'small',
@@ -29959,12 +29959,14 @@ var folders = exports.folders = function folders(state, action) {
   }
 };
 var processes = exports.processes = function processes(state, action) {
-  console.log('action dets' + action.dets);
+  console.log('action process name ' + action.processName);
+  console.log('action dets ' + action.dets);
   switch (action.type) {
     case 'RECEIVE_DATA':
       return action.data.processes || state;
     case 'ADD_PROCESS':
-      var newProcess = Object.assign({}, action.data, {
+      var newProcess = Object.assign({}, {
+        processName: action.processName,
         score: 1,
         id: +new Date(),
         folderId: action.dets
