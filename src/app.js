@@ -54,8 +54,8 @@ function save() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      decks: state.folders,
-      cards: state.cards
+      folders: state.folders,
+      processes: state.processes
     })
   });
 }

@@ -28,8 +28,8 @@ const Folders = React.createClass({
               <div className="bg-light lter b-b wrapper-md">
                   <div className="row">
                 <div className="col-sm-6 col-xs-12">
-                    <h1 className="m-n font-thin h3 text-black">Folder</h1>
-                    <small className="text-muted">All processes listed here now</small>
+                    <h1 className="m-n font-thin h3 text-black">Folders</h1>
+                    <small className="text-muted">List of all folders</small>
                 </div>
                   </div>
               </div>
@@ -55,8 +55,8 @@ const Folders = React.createClass({
                     <Link to={`/folder/${folder.name}`} className="list-group-item clearfix m-b">
 
                   <span className="clear">
-                      <span>{folder.name} Test</span>
-                      <small className="text-muted clear text-ellipsis">Description</small>
+                      <span>{folder.name}</span>
+                      <small className="text-muted clear text-ellipsis">Click here to view folder contents</small>
                   </span>
                 </Link>
                 </div>

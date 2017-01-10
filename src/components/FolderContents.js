@@ -32,8 +32,8 @@ console.log(props.processes);
           <div className="bg-light lter b-b wrapper-md">
               <div className="row">
             <div className="col-sm-6 col-xs-12">
-                <h1 className="m-n font-thin h3 text-black">Folder: {props.folderId}</h1>
-                <small className="text-muted">All processes listed here</small>
+                <h1 className="m-n font-thin h3 text-black">Folder / {props.folderId}</h1>
+                <small className="text-muted">Processes assoicated with {props.folderId} listed here</small>
             </div>
               </div>
           </div>

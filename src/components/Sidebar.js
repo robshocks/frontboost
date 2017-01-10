@@ -50,7 +50,7 @@ const Sidebar = React.createClass({
                                 <i className="fa fa-fw fa-angle-down text-active"></i>
                               </span>
                               <i className="fa fa-folder icon text-primary"></i>
-                              <span className="font-bold">Folders1</span>
+                              <span className="font-bold">Folders</span>
                             </Link>
                             {/*
                             <ul>

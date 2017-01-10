@@ -28216,8 +28216,8 @@ function save() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      decks: state.folders,
-      cards: state.cards
+      folders: state.folders,
+      processes: state.processes
     })
   });
 }
@@ -28560,13 +28560,15 @@ var Cards = _react2.default.createClass({
             _react2.default.createElement(
               'h1',
               { className: 'm-n font-thin h3 text-black' },
-              'Folder: ',
+              'Folder / ',
               props.folderId
             ),
             _react2.default.createElement(
               'small',
               { className: 'text-muted' },
-              'All processes listed here'
+              'Processes assoicated with ',
+              props.folderId,
+              ' listed here'
             )
           )
         )
@@ -28768,12 +28770,12 @@ var Folders = _react2.default.createClass({
             _react2.default.createElement(
               'h1',
               { className: 'm-n font-thin h3 text-black' },
-              'Folder'
+              'Folders'
             ),
             _react2.default.createElement(
               'small',
               { className: 'text-muted' },
-              'All processes listed here now'
+              'List of all folders'
             )
           )
         )
@@ -28819,13 +28821,12 @@ var Folders = _react2.default.createClass({
                   _react2.default.createElement(
                     'span',
                     null,
-                    folder.name,
-                    ' Test'
+                    folder.name
                   ),
                   _react2.default.createElement(
                     'small',
                     { className: 'text-muted clear text-ellipsis' },
-                    'Description'
+                    'Click here to view folder contents'
                   )
                 )
               )
@@ -29468,7 +29469,7 @@ var Sidebar = _react2.default.createClass({
                   _react2.default.createElement(
                     'span',
                     { className: 'font-bold' },
-                    'Folders1'
+                    'Folders'
                   )
                 )
               ),
