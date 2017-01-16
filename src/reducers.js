@@ -7,44 +7,46 @@
 //   }
 // };
 // {cardFilter: data or ''}
-export const cardFilter = (state, action) => {
-  switch (action.type) {
-    case 'FILTER_CARDS':
-      return action.data;
-    default:
-      return state || '';
-  }
-};
-
-export const cards = (state, action) => {
-  switch (action.type) {
-    case 'RECEIVE_DATA':
-      return action.data.cards || state;
-    case 'ADD_CARD':
-      let newCard = Object.assign({}, action.data, {
-        score: 1,
-        id: +new Date
-      });
-
-      return state.concat([newCard]);
-    case 'UPDATE_CARD':
-      let cardUpdate = action.data;
-      return state.map(card => (card.id !== cardUpdate.id) ?
-        card :
-        Object.assign({}, card, cardUpdate)
-      );
-    case 'DELETE_CARD':
-      return state.filter(c => c.id !== action.data);
-    default:
-      return state || [];
-  }
-};
+// export const cardFilter = (state, action) => {
+//   switch (action.type) {
+//     case 'FILTER_CARDS':
+//       return action.data;
+//     default:
+//       return state || '';
+//   }
+// };
+//
+// export const cards = (state, action) => {
+//   switch (action.type) {
+//     case 'RECEIVE_DATA':
+//       return action.data.cards || state;
+//     case 'ADD_CARD':
+//       let newCard = Object.assign({}, action.data, {
+//         score: 1,
+//         id: +new Date
+//       });
+//
+//       return state.concat([newCard]);
+//     case 'UPDATE_CARD':
+//       let cardUpdate = action.data;
+//       return state.map(card => (card.id !== cardUpdate.id) ?
+//         card :
+//         Object.assign({}, card, cardUpdate)
+//       );
+//     case 'DELETE_CARD':
+//       return state.filter(c => c.id !== action.data);
+//     default:
+//       return state || [];
+//   }
+//};
 
 export const folders = (state, action) => {
   switch (action.type) {
     case 'RECEIVE_DATA':
+    console.log('recieve data');
       return action.data.folders || state;
     case 'ADD_FOLDER':
+    //console.log('ADD FOLDER BOOM');
       let newFolder = { name: action.data, id: +new Date };
       return state.concat([newFolder]);
     default:
@@ -52,8 +54,8 @@ export const folders = (state, action) => {
   }
 };
 export const processes = (state, action) => {
-console.log('action process name '+ action.processName);
-console.log('action dets '+ action.dets);
+//console.log('action process name '+ action.processName);
+//console.log('action dets '+ action.dets);
   switch (action.type) {
     case 'RECEIVE_DATA':
       return action.data.processes || state;

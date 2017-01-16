@@ -58,14 +58,26 @@ function save() {
       processes: state.processes
     })
   });
+  // fetch('/api/folder', {
+  //   method: 'POST',
+  //   headers: {
+  //     Accept: 'application/json',
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify({
+  //     name: state.folders,
+  //     processes: state.processes
+  //   })
+  // });
 }
 
 function init () {
   run(); //initialize routing function above
   // Listen for changes to the store then run events
   store.subscribe(run);
+  // Save events to state and write to api/data
   store.subscribe(save);
-  // Dispatch sends action to the reducer which then changes state
+  // requests /api/data from actions fetchData which fires RECEIVE_DATA action
   store.dispatch(fetchData());
 }
 
